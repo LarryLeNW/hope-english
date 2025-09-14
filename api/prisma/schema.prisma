@@ -1,0 +1,193 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+
+  prayers     Prayer[]
+  devotions   Devotion[]          @relation("DevotionAuthor")
+  reflections ReflectionComment[]
+  favorites   Favorite[]
+}
+
+model Prayer {
+  id          String       @id @default(cuid())
+  authorId    String?
+  author      User?        @relation(fields: [authorId], references: [id])
+  title       String
+  content     String
+  isAnonymous Boolean      @default(true)
+  status      PrayerStatus @default(PENDING)
+  createdAt   DateTime     @default(now())
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  title     String
+  startsAt  DateTime
+  endsAt    DateTime
+  location  String?
+  desc      String?
+  createdAt DateTime @default(now())
+}
+
+model LiturgicalDay {
+  id           String           @id @default(cuid())
+  date         DateTime         @unique
+  season       LiturgicalSeason
+  cycleYear    LiturgicalCycle?
+  weekdayCycle WeekdayCycle?
+  title        String?
+  createdAt    DateTime         @default(now())
+
+  readings  Reading[]
+  devotions Devotion[]
+}
+
+model Reading {
+  id              String        @id @default(cuid())
+  liturgicalDayId String
+  liturgicalDay   LiturgicalDay @relation(fields: [liturgicalDayId], references: [id])
+  type            ReadingType
+  reference       String
+  textMd          String?
+  response        String?
+
+  @@index([liturgicalDayId, type])
+}
+
+model Devotion {
+  id              String         @id @default(cuid())
+  slug            String         @unique
+  authorId        String
+  author          User?          @relation("DevotionAuthor", fields: [authorId], references: [id])
+  liturgicalDayId String?
+  liturgicalDay   LiturgicalDay? @relation(fields: [liturgicalDayId], references: [id])
+
+  title         String
+  excerpt       String?
+  contentMd     String?
+  contentHtml   String?
+  coverImageUrl String?
+  audioUrl      String?
+  videoUrl      String?
+
+  status       DevotionStatus @default(DRAFT)
+  scheduledFor DateTime?
+  publishedAt  DateTime?
+  views        Int            @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tags        DevotionTagOnDevotion[]
+  favorites   Favorite[]
+  reflections ReflectionComment[]
+
+  @@index([status, publishedAt])
+  @@index([liturgicalDayId])
+}
+
+model DevotionTag {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  devotions DevotionTagOnDevotion[]
+
+  @@index([slug])
+}
+
+model DevotionTagOnDevotion {
+  devotionId String
+  tagId      String
+  devotion   Devotion    @relation(fields: [devotionId], references: [id])
+  tag        DevotionTag @relation(fields: [tagId], references: [id])
+  @@id([devotionId, tagId])
+}
+
+model Favorite {
+  userId     String
+  devotionId String
+  user       User     @relation(fields: [userId], references: [id])
+  devotion   Devotion @relation(fields: [devotionId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@id([userId, devotionId])
+  @@index([devotionId])
+}
+
+model ReflectionComment {
+  id         String          @id @default(cuid())
+  devotionId String
+  devotion   Devotion        @relation(fields: [devotionId], references: [id])
+  authorId   String?
+  author     User?           @relation(fields: [authorId], references: [id])
+  content    String
+  status     ModerationState @default(PENDING)
+  createdAt  DateTime        @default(now())
+
+  @@index([devotionId, status, createdAt])
+}
+
+enum Role {
+  USER
+  MOD
+  ADMIN
+}
+
+enum PrayerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum DevotionStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+}
+
+enum LiturgicalSeason {
+  ADVENT
+  CHRISTMAS
+  LENT
+  EASTER
+  ORDINARY
+}
+
+enum LiturgicalCycle {
+  A
+  B
+  C
+}
+
+enum WeekdayCycle {
+  I
+  II
+}
+
+enum ReadingType {
+  GOSPEL
+  FIRST
+  PSALM
+  SECOND
+  OTHER
+}
+
+enum ModerationState {
+  PENDING
+  APPROVED
+  REJECTED
+}
