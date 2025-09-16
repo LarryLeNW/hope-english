@@ -3,11 +3,11 @@ import {
   UseGuards, Patch
 } from '@nestjs/common'
 import { PrismaService } from '../../shared/prisma.service'
-import { JwtAuthGuard } from '../../shared/jwt-auth.guard'
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger'
 import { AddReflectionDto, CreateDevotionDto, ModerateDevotionDto, ModerateReflectionDto } from './dto'
 import { BadRequestException } from '@nestjs/common'
 import { DevotionStatus } from '@prisma/client'
+import { JwtAuthGuard } from 'shared/jwt-auth.guard'
 
 function slugify(input: string) {
   return input

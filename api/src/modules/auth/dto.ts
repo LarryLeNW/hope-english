@@ -34,9 +34,14 @@ export class RegisterResponseDto {
 
     @ApiProperty({ example: 'user@example.com' })
     email: string;
+
+    @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
+    access_token: string;
 }
 
 export class AuthTokenResponseDto {
     @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
     access_token: string;
 }
+
+export type JwtPayload = { sub: string; role: string }

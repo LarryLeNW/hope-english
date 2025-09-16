@@ -14,11 +14,14 @@ model User {
   name      String?
   role      Role     @default(USER)
   createdAt DateTime @default(now())
-
+  refreshTokenHash String?
+  refreshTokenExp  DateTime?
+  
   prayers     Prayer[]
   devotions   Devotion[]          @relation("DevotionAuthor")
   reflections ReflectionComment[]
   favorites   Favorite[]
+  
 }
 
 model Prayer {
@@ -139,6 +142,49 @@ model ReflectionComment {
   createdAt  DateTime        @default(now())
 
   @@index([devotionId, status, createdAt])
+}
+
+model BookCategory {
+  id             String     @id @default(cuid())
+  name           String
+  slug           String     @unique
+  image          String?
+  canonicalOrder Int        
+  books          Book[]
+
+  @@map("book_category")    
+}
+
+model Book {
+  id              String        @id @default(cuid())
+  title           String
+  abbrev          String?       @unique
+  canonicalOrder  Int
+  chapters        Int?
+
+  categoryId      String?
+  category        BookCategory? @relation(fields: [categoryId], references: [id])
+
+  verses          BibleVerse[]
+
+  @@index([canonicalOrder])
+  @@index([categoryId])
+  @@map("book")
+}
+
+model BibleVerse {
+  id        String @id @default(cuid())
+  bookId    String
+  book      Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  chapter   Int
+  verse     Int
+  text      String
+  version   String?
+
+  @@unique([bookId, chapter, verse])
+  @@index([bookId, chapter])
+  @@map("bible_verses")
 }
 
 enum Role {

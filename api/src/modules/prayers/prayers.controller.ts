@@ -1,10 +1,12 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common'
 import { PrismaService } from '../../shared/prisma.service'
-import { JwtAuthGuard } from '../../shared/jwt-auth.guard'
+import { JwtAuthGuard } from 'shared/jwt-auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Prayers')
 @Controller('prayers')
 export class PrayersController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   @Get()
   async approved() {

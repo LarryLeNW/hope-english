@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+   "prisma": { "seed": "ts-node prisma/seed_bible.ts" },
   "scripts": {
-    "start" : "nest start",
-    "dev" : "nest start --watch",
+    "start": "nest start",
+    "dev": "nest start --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -24,6 +25,7 @@
     "class-validator": "^0.14.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "csv-parse": "^6.1.0",
     "dotenv": "^17.2.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",

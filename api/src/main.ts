@@ -26,6 +26,5 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT || 3001)
   console.log('API http://localhost:' + (process.env.PORT || 3001) + "/docs")
-  console.log('Swagger docs at /docs')
 }
 bootstrap()
