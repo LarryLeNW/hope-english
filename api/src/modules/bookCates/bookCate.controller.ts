@@ -3,6 +3,7 @@ import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from 
 import { BookCategory } from '@prisma/client';
 import { BookCateService } from 'modules/bookCates/bookCate.service';
 import { CreateBookCategoryDto, GetBooksQueryDto, UpdateBookCategoryDto } from 'modules/bookCates/dto';
+import { PagedResult } from 'types';
 
 
 @ApiTags('Book Categories')
@@ -29,7 +30,7 @@ export class BookCateController {
     @ApiQuery({ name: 'search', required: false, description: 'Search term for book categories', type: String, example: 'old' })
     @ApiQuery({ name: 'orderBy', required: false, description: 'Field to order by', type: String, example: 'canonicalOrder' })
     @ApiQuery({ name: 'orderDirection', required: false, description: 'Order direction', type: String, enum: ['asc', 'desc'], example: 'asc' })
-    async getAll(@Query() query: GetBooksQueryDto): Promise<BookCategory[]> {
+    async getAll(@Query() query: GetBooksQueryDto): Promise<PagedResult<BookCategory>> {
         return this.bookCateService.getCategories(
             query.page,
             query.pageSize,

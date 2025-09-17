@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Book, BookCategory } from '@prisma/client';
 import { PrismaService } from 'shared/prisma.service';
+import { PagedResult } from 'types';
 
 @Injectable()
 export class BookService {
@@ -19,10 +20,27 @@ export class BookService {
         orderBy: string = 'canonicalOrder',
         orderDirection: 'asc' | 'desc' = 'asc',
         categoryId: string | null = null
-    ): Promise<Book[]> {
+    ): Promise<PagedResult<Book>> {
         const skip = (page - 1) * pageSize;
 
-        return this.prisma.book.findMany({
+        const result = await this.prisma.book.aggregate({
+            _count: {
+                id: true,
+            },
+            where: {
+                AND: [
+                    {
+                        OR: [
+                            { title: { contains: search, mode: 'insensitive' } },
+                            { abbrev: { contains: search, mode: 'insensitive' } },
+                        ],
+                    },
+                    categoryId ? { categoryId: categoryId } : {},
+                ],
+            },
+        });
+
+        const books = await this.prisma.book.findMany({
             where: {
                 AND: [
                     {
@@ -40,6 +58,21 @@ export class BookService {
                 [orderBy]: orderDirection,
             },
         });
+
+        const totalItems = result._count.id;
+        const totalPages = Math.ceil(totalItems / pageSize);
+        const hasNext = page < totalPages;
+        const hasPrevious = page > 1;
+
+        return {
+            items: books,
+            page,
+            pageSize,
+            totalItems,
+            totalPages,
+            hasNext,
+            hasPrevious,
+        };
     }
 
     async getBookById(id: string): Promise<Book> {

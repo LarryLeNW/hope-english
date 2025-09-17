@@ -2,6 +2,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Book, BookCategory } from '@prisma/client';
 import { PrismaService } from 'shared/prisma.service';
+import { PagedResult } from 'types';
 
 @Injectable()
 export class BookCateService {
@@ -18,14 +19,35 @@ export class BookCateService {
         pageSize: number = 10,
         search: string = '',
         orderBy: string = 'canonicalOrder',
-        orderDirection: 'asc' | 'desc' = 'asc'
-    ): Promise<BookCategory[]> {
+        orderDirection: 'asc' | 'desc' = 'asc',
+    ): Promise<PagedResult<BookCategory>> {
         const skip = (page - 1) * pageSize;
-        return this.prisma.bookCategory.findMany({
+
+        const result = await this.prisma.bookCategory.aggregate({
+            _count: {
+                id: true,
+            },
             where: {
-                OR: [
-                    { name: { contains: search, mode: 'insensitive' } },
-                    { slug: { contains: search, mode: 'insensitive' } }
+                AND: [
+                    {
+                        OR: [
+                            { name: { contains: search, mode: 'insensitive' } },
+                            { slug: { contains: search, mode: 'insensitive' } },
+                        ],
+                    },
+                ],
+            },
+        });
+
+        const categories = await this.prisma.bookCategory.findMany({
+            where: {
+                AND: [
+                    {
+                        OR: [
+                            { name: { contains: search, mode: 'insensitive' } },
+                            { slug: { contains: search, mode: 'insensitive' } },
+                        ],
+                    },
                 ],
             },
             skip,
@@ -34,6 +56,21 @@ export class BookCateService {
                 [orderBy]: orderDirection,
             },
         });
+
+        const totalItems = result._count.id;
+        const totalPages = Math.ceil(totalItems / pageSize);
+        const hasNext = page < totalPages;
+        const hasPrevious = page > 1;
+
+        return {
+            items: categories,
+            page,
+            pageSize,
+            totalItems,
+            totalPages,
+            hasNext,
+            hasPrevious,
+        };
     }
 
     async getCategoryById(id: string): Promise<BookCategory> {

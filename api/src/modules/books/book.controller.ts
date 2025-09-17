@@ -3,6 +3,7 @@ import { ApiOperation, ApiResponse, ApiTags, ApiQuery, ApiParam, ApiBody } from 
 import { BookService } from './book.service';
 import { Book } from '@prisma/client';
 import { BookResDto, CreateBookDto } from 'modules/books/dto';
+import { PagedResult } from 'types';
 
 @ApiTags('Books')
 @Controller('books')
@@ -36,7 +37,7 @@ export class BookController {
         @Query('orderBy') orderBy: string = 'canonicalOrder',
         @Query('orderDirection') orderDirection: 'asc' | 'desc' = 'asc',
         @Query('categoryId') categoryId: string | null = null
-    ): Promise<Book[]> {
+    ): Promise<PagedResult<Book>> {
         return this.bookService.getAllBooks(page, pageSize, search, orderBy, orderDirection, categoryId);
     }
 
