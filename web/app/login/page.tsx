@@ -6,9 +6,8 @@ import Link from 'next/link';
 import { ArrowLeft, BookOpen, Eye, EyeOff, Lock, Mail, Sparkles } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const router = useRouter();
@@ -25,7 +24,7 @@ export default function Login() {
     try {
       const { data } = await api.post('/auth/login', { email, password });
       login({ email: email }, data.access_token);
-      router.push('/');
+      router.push("/");
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed');
     }

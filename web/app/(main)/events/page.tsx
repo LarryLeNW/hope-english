@@ -17,8 +17,8 @@ export default function Events() {
   // }
 
   return (
-    <div>
-      <h1 className="text-xl font-semibold mb-3">Lịch lễ</h1>
+    <div className='border '>
+      <h1 className="text-xl font-semibold mb-3">Lịch lễ 324</h1>
       {/* <button className="border rounded px-3 py-2 mb-4" onClick={add}>Tạo mẫu 1 sự kiện</button> */}
       {/* <ul className="space-y-2">
         {items.map(e => <li key={e.id} className="border rounded p-3">

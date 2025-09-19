@@ -32,7 +32,7 @@ const featuredBooks = [
         reviews: 1247,
         time: "09/09/2025 18:00",
         image: "https://scontent.fdad3-6.fna.fbcdn.net/v/t39.30808-6/545408913_1758927838835401_4308965763236215539_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_ohc=AC5p_SSXPMQQ7kNvwGZFGIe&_nc_oc=AdnRVltGafW3pvVUx7dFvdfykrMXnVkrbVSRWVHf2R0M49gkiXQGtw63jZ2DCSo7EupyBkiVCQOl62i_f7gl8UsR&_nc_zt=23&_nc_ht=scontent.fdad3-6.fna&_nc_gid=GQkQ6ClhvuETvbvzm7qHaA&oh=00_AfYs2PZSRGVKFuCCAQ-wlxiyMcd-xpjul2CCnwuzP0WMgA&oe=68CFB300",
-        category: "News",
+        category: "Event",
         description: "Please join us for a night of fellowship, food and family...",
         color: "from-purple-600 to-blue-600",
         accent: "purple",
@@ -86,7 +86,7 @@ const featuredBooks = [
         reviews: 987,
         time: "24/07/2025 08:00",
         image: "https://scontent.fdad3-6.fna.fbcdn.net/v/t39.30808-6/521481973_1718901252838060_8436415386296698537_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=OqMkIXiqlnAQ7kNvwE87hzl&_nc_oc=AdlB79ptTnvXNp5tiJEUez4kNh85zwSQjwBmrdL129fRCp8fBx9r4-WkQ-2QfUlOawfL8Xi6l7lEM-G-RGU9AHP8&_nc_zt=23&_nc_ht=scontent.fdad3-6.fna&_nc_gid=y9ThA8fwHV2OvP8PEK7F6A&oh=00_Afb6E7BlkYyMH1kCNXqssRzgbNPekFLK0RrjHwNkF6ffmg&oe=68CFBE2E",
-        category: "Literary Fiction",
+        category: "Event",
         description:
             "Coffee Talk Saturday morning 8:00 am",
         color: "from-purple-600 to-blue-600",
@@ -100,7 +100,7 @@ const featuredBooks = [
         time: "23/07/2025 19:30",
         reviews: 1543,
         image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhTrPDOUbu4O37c_dr1u-A3b_qYQDZDS2NNMJwCGps5N0XAjvSylhXG7IRP4cle2p_cFo67VBYxEX6GDw49u8-aGSxRAhlbIZge1CtEBc7qHo3bTu31Y9SiOPKbKM-0rLd04YpuUjvYZv2499MBxo2Vi2pOw0HKVxr8YWgdrVVlemwaGlPeUsOzVTJ0ew/w1200-h630-p-k-no-nu/DALL%C2%B7E%202023-01-23%2011.21.28%20-%20The%20effects%20of%20social%20media.png",
-        category: "Fantasy",
+        category: "Event",
         description: "A life no one will remember. A story you will never forget.",
         color: "from-purple-600 to-blue-600",
         accent: "purple",
@@ -172,7 +172,7 @@ export default function UniqueBookstore() {
                 <div className="absolute bottom-60 right-1/3 w-2 h-2 bg-green-400 rounded-full animate-bounce opacity-50"></div>
             </div>
 
-            <section className="relative py-20 md:py-32 overflow-hidden w-full">
+            <section className="relative py-20 md:py-26 overflow-hidden w-full">
                 <div
                     className="absolute inset-0 bg-gradient-to-r "
                     style={{ transform: `translateY(${scrollY * 0.5}px)` }}
