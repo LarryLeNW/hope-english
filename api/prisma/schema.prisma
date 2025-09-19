@@ -18,6 +18,7 @@ model User {
   refreshTokenExp  DateTime?
   
   prayers     Prayer[]
+  events      Event[]
   devotions   Devotion[]          @relation("DevotionAuthor")
   reflections ReflectionComment[]
   favorites   Favorite[]
@@ -40,10 +41,18 @@ model Event {
   title     String
   startsAt  DateTime
   endsAt    DateTime
+  time      String?
   location  String?
   desc      String?
+  dayOfWeek DayOfWeek[] @default([ALL]) 
+  images    String[] 
   createdAt DateTime @default(now())
+  authorId  String   
+  author    User     @relation(fields: [authorId], references: [id]) 
+
+  @@index([startsAt, endsAt])
 }
+
 
 model LiturgicalDay {
   id           String           @id @default(cuid())
@@ -236,4 +245,15 @@ enum ModerationState {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+  ALL
 }

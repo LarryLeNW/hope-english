@@ -7,3 +7,14 @@ export interface PagedResult<T> {
     hasNext: boolean;
     hasPrevious: boolean;
 }
+
+export enum DayOfWeek {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY,
+    ALL
+}

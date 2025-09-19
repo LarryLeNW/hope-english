@@ -1,5 +1,5 @@
 import { BadRequestException, Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiUnauthorizedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiUnauthorizedResponse, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UserService } from 'modules/user/user.service';
 import { JwtAuthGuard } from 'shared/jwt-auth.guard';
 
@@ -11,6 +11,7 @@ export class UserController {
     @ApiOperation({ summary: 'Get current user information' })
     @ApiOkResponse({ description: 'User information retrieved successfully' })
     @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @Get('me')
     async getMe(@Req() req) {
