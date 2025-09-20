@@ -40,7 +40,7 @@ const menuItems = [
     {
         title: "Sự kiện",
         icon: Calendar,
-        href: "/admin/events",
+        href: "/admin/events/month-view",
         badge: "1.2k",
     },
     {

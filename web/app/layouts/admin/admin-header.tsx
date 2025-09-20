@@ -1,28 +1,36 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Bell, Settings, User, LogOut, Moon, Sun } from "lucide-react"
 import { useState } from "react"
+import useAuthStore from "@/store/auth"
+import { useRouter } from "next/navigation"
 
 export default function AdminHeader() {
+    const router = useRouter()
     const [isDark, setIsDark] = useState(false)
+    const { user, logout } = useAuthStore((state: any) => ({
+        user: state.user,
+        logout: state.logout,
+    }));
 
     const toggleTheme = () => {
         setIsDark(!isDark)
         document.documentElement.classList.toggle("dark")
     }
 
+    const handleLogout = () => {
+        logout();
+        router.push('/login');
+    }
+
     return (
         <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
             <div className="flex items-center space-x-4">
-                <h1 className="text-xl font-semibold text-foreground">Dashboard</h1>
-                <Badge variant="secondary" className="text-xs">
-                    Live
-                </Badge>
+                <h1 className="text-lg md:text-xl font-semibold text-foreground">Dashboard</h1>
             </div>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-1 md:space-x-3">
                 <Button variant="ghost" size="sm" onClick={toggleTheme} className="text-muted-foreground hover:text-foreground">
                     {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                 </Button>
@@ -42,7 +50,7 @@ export default function AdminHeader() {
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
                         <User className="h-4 w-4 text-primary-foreground" />
                     </div>
-                    <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                    <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground cursor-pointer" onClick={handleLogout}>
                         <LogOut className="h-4 w-4" />
                     </Button>
                 </div>

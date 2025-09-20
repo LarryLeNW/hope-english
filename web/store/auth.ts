@@ -9,13 +9,17 @@ const useAuthStore = create((set) => ({
     set({ user, accessToken: access_token });
     Cookies.set('access_token', access_token);
   },
-  logout: () => {
+  logout: async () => {
+    const response = await api.post('/auth/logout');
+    if (response) {
+      set({ user: response.data });
+    }
     set({ user: null, accessToken: null });
     Cookies.remove('access_token');
   },
-  refreshAccessToken: (newAccessToken: string) => {
-    set({ accessToken: newAccessToken });
-    Cookies.set('access_token', newAccessToken);
+  refreshAccessToken: (accessToken: string) => {
+    set({ accessToken });
+    Cookies.set('access_token', accessToken);
   },
   fetchUser: async () => {
     try {
