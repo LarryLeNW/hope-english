@@ -22,6 +22,12 @@ export class CreateEventDto {
     location?: string;
 
 
+    @ApiProperty({ description: 'Màu sắc của sự kiện', example: 'blue', required: false })
+    @IsOptional()
+    @IsString()
+    color?: string;
+
+
     @ApiProperty({ description: 'Thời gian diễn ra', example: '2h', required: false })
     @IsOptional()
     @IsString()
@@ -65,7 +71,6 @@ export class CreateEventDto {
     dayOfWeek?: DayOfWeek[];
 }
 
-
 export class UpdateEventDto {
     @ApiProperty({ description: 'Tiêu đề của sự kiện', example: 'Giáng sinh 2023', required: false })
     @IsOptional()
@@ -86,6 +91,13 @@ export class UpdateEventDto {
     @IsOptional()
     @IsString()
     location?: string;
+
+
+    @ApiProperty({ description: 'Màu sắc của sự kiện', example: 'blue', required: false })
+    @IsOptional()
+    @IsString()
+    color?: string;
+
 
     @ApiProperty({ description: 'Mô tả về sự kiện', example: 'Lễ Giáng Sinh hoành tráng', required: false })
     @IsOptional()

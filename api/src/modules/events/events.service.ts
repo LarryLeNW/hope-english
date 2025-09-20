@@ -61,6 +61,7 @@ export class EventsService {
                 images: dto.images,
                 dayOfWeek: dto.dayOfWeek,
                 time: dto.time,
+                color: dto.color,
             },
         });
     }
@@ -79,6 +80,9 @@ export class EventsService {
                 location: dto.location ?? event.location,
                 desc: dto.desc ?? event.desc,
                 images: dto.images,
+                time: dto.time ?? event.time,
+                color: dto.color ?? event.color,
+                dayOfWeek: dto.dayOfWeek ?? event.dayOfWeek,
             },
         });
     }

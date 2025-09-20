@@ -48,6 +48,7 @@ model Event {
   images    String[] 
   createdAt DateTime @default(now())
   authorId  String   
+  color     String?
   author    User     @relation(fields: [authorId], references: [id]) 
 
   @@index([startsAt, endsAt])
