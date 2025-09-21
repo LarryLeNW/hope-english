@@ -44,6 +44,8 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.63.0",
+    "react-leaflet": "^5.0.0",
+    "react-window": "^1.8.11",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.13",
     "zod": "^4.1.9",
@@ -52,6 +54,7 @@
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "9.0.6",
+    "@types/leaflet": "^1.9.20",
     "@types/node": "20.14.11",
     "@types/react": "19.1.12",
     "tw-animate-css": "^1.3.8",

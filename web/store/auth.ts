@@ -10,10 +10,7 @@ const useAuthStore = create((set) => ({
     Cookies.set('access_token', access_token);
   },
   logout: async () => {
-    const response = await api.post('/auth/logout');
-    if (response) {
-      set({ user: response.data });
-    }
+    await api.post('/auth/logout');
     set({ user: null, accessToken: null });
     Cookies.remove('access_token');
   },

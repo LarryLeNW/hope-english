@@ -8,11 +8,7 @@ export const USER_MENUS = [
         href: "/events",
     },
     {
-        title: "Prayers",
-        href: "/prayers",
-    },
-    {
-        title: "Devotions",
-        href: "/devotions",
+        title: "Location",
+        href: "/location",
     }
 ]
