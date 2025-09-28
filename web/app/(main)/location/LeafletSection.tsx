@@ -76,6 +76,11 @@ export default function LeafletSection({ items, selectedId, onSelect, selectedCo
                             <Popup>
                                 <div className="font-semibold text-blue-600 text-lg">{p.name}</div>
                                 <em className="text-sm text-gray-600">{p.description}</em>
+                                {
+                                    p.description && <div className="flex justify-end">
+                                        <a href="https://maps.app.goo.gl/EUXynJJx4zDbJVrXA" target="_blank">View on Map</a>
+                                    </div>
+                                }
                             </Popup>
                         </Marker>
                     );

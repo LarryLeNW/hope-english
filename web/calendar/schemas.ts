@@ -1,14 +1,30 @@
 import { z } from "zod";
 
+export const DayOfWeekEnum = z.enum(["MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY",
+  "ALL"]);
+
+
+export const TimeHHmm = z
+  .string()
+  .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Time must be HH:mm")
+  .optional();
+
 export const eventSchema = z.object({
-  user: z.string(),
   title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  startDate: z.date({ required_error: "Start date is required" }),
-  startTime: z.object({ hour: z.number(), minute: z.number() }, { required_error: "Start time is required" }),
-  endDate: z.date({ required_error: "End date is required" }),
-  endTime: z.object({ hour: z.number(), minute: z.number() }, { required_error: "End time is required" }),
-  color: z.enum(["blue", "green", "red", "yellow", "purple", "orange", "gray"], { required_error: "Color is required" }),
+  desc: z.string().optional(),
+  startsAt: z.string().refine(v => !isNaN(Date.parse(v)), { message: "Invalid ISO date" }),
+  endsAt: z.string().refine(v => !isNaN(Date.parse(v)), { message: "Invalid ISO date" }),
+  location: z.string().optional(),
+  color: z.string().optional(),
+  time: TimeHHmm,
+  images: z.array(z.string().url()).optional(),
+  dayOfWeek: z.array(DayOfWeekEnum).optional(),
 });
 
 export type TEventFormData = z.infer<typeof eventSchema>;

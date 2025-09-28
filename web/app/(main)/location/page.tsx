@@ -17,17 +17,16 @@ export type Place = {
     location: { lat: number; lng: number };
 };
 
-// Demo data
 const demoPlacesByCity: Record<string, Place[]> = {
     "Nha Trang": [
-        { id: "nt-01", name: "Khu vực chính", rating: 4, description: "Di tích Chăm nổi tiếng", location: { lat: 12.2658, lng: 109.197 } },
-        { id: "nt-02", name: "Chợ Đầm", rating: 3, description: "Khu chợ trung tâm", location: { lat: 12.2529, lng: 109.1914 } },
-        { id: "nt-03", name: "Biển Trần Phú", rating: 3, description: "Bãi biển chính", location: { lat: 12.2383, lng: 109.1967 } },
+        { id: "nt-01", name: "Khu vực chính", rating: 4, location: { lat: 12.2658, lng: 109.197 } },
+        { id: "nt-02", name: "Chợ Đầm", rating: 3, location: { lat: 12.2529, lng: 109.1914 } },
+        { id: "nt-03", name: "Biển Trần Phú", rating: 3, location: { lat: 12.2383, lng: 109.1967 } },
     ],
     "Da Nang": [
-        { id: "dn-01", name: "Khu vực chính", rating: 5, description: "Biểu tượng Đà Nẵng", location: { lat: 16.0614, lng: 108.231 } },
-        { id: "dn-02", name: "Chợ Hàn", rating: 3, description: "Chợ truyền thống", location: { lat: 16.0678, lng: 108.2208 } },
-        { id: "dn-03", name: "Bán đảo Sơn Trà", rating: 3, description: "Thiên nhiên đẹp", location: { lat: 16.1167, lng: 108.3 } },
+        { id: "dn-01", name: "Main classroom", rating: 5, description: "55 Nại Nam, Hoà Cường Bắc, Hải Châu, Đà Nẵng, Vietnam", location: { lat: 16.0344241, lng: 108.2300503 } },
+        { id: "dn-02", name: "Chợ Hàn", rating: 3, location: { lat: 16.0678, lng: 108.2208 } },
+        { id: "dn-03", name: "Bán đảo Sơn Trà", rating: 3, location: { lat: 16.1167, lng: 108.3 } },
     ],
 };
 

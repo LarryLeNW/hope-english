@@ -31,7 +31,7 @@ const featuredBooks = [
         rating: 4.8,
         reviews: 1247,
         time: "09/09/2025 18:00",
-        image: "https://scontent.fdad3-6.fna.fbcdn.net/v/t39.30808-6/545408913_1758927838835401_4308965763236215539_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_ohc=AC5p_SSXPMQQ7kNvwGZFGIe&_nc_oc=AdnRVltGafW3pvVUx7dFvdfykrMXnVkrbVSRWVHf2R0M49gkiXQGtw63jZ2DCSo7EupyBkiVCQOl62i_f7gl8UsR&_nc_zt=23&_nc_ht=scontent.fdad3-6.fna&_nc_gid=GQkQ6ClhvuETvbvzm7qHaA&oh=00_AfYs2PZSRGVKFuCCAQ-wlxiyMcd-xpjul2CCnwuzP0WMgA&oe=68CFB300",
+        image: "https://tse1.mm.bing.net/th/id/OIP.f7MS0EtRThJCIDrl5qWXmAHaF0?rs=1&pid=ImgDetMain&o=7&rm=3",
         category: "Event",
         description: "Please join us for a night of fellowship, food and family...",
         color: "from-purple-600 to-blue-600",
@@ -43,7 +43,7 @@ const featuredBooks = [
         author: "Teacher TJ",
         rating: 4.9,
         reviews: 2156,
-        image: "https://scontent.fdad3-6.fna.fbcdn.net/v/t39.30808-6/530221162_1736087851119400_5647083391161124424_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=GYB6tbyRwysQ7kNvwGsbF6i&_nc_oc=AdlXKlopZA7GlZbj0RWGZAeHgyumdc_ro0OvY6FWQIu2wD23nKlFhdyIvkRb87DtKNdBqj4oXrJKQjEpvk3SIwdw&_nc_zt=23&_nc_ht=scontent.fdad3-6.fna&_nc_gid=nxL0NCpRzWrqNLaYmJWNtQ&oh=00_AfaEbmLD0zAFx554OjiTsPughcbDqTjQ_gw15BENeHHl0Q&oe=68CFCD5F",
+        image: "https://tse1.mm.bing.net/th/id/OIP.f7MS0EtRThJCIDrl5qWXmAHaF0?rs=1&pid=ImgDetMain&o=7&rm=3",
         category: "News",
         time: "13/08/2025 13:25",
         description:
@@ -71,7 +71,7 @@ const featuredBooks = [
         time: "06/08/2025 19:30",
         rating: 4.8,
         reviews: 1876,
-        image: "https://scontent.fdad3-6.fna.fbcdn.net/v/t39.30808-6/527375658_1729006885160830_4312143062755175264_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_ohc=qa1lJzuBy6UQ7kNvwFYZK9s&_nc_oc=Adl0AOKzU15Ut9asSoEjYPbSPVdpjgFMkusH3EJtfqbQrMhz5-GI7uDVIFDNvp1nOv-1fJX-ZB2P83io_RIfWRTu&_nc_zt=23&_nc_ht=scontent.fdad3-6.fna&_nc_gid=PmO3379ebZTUVygZMtxg6A&oh=00_Afbdp3dfeBf6PzvyFLtkNjRjcSsbEFy1yavppzghidxMnw&oe=68CFBC79",
+        image: "https://tse1.mm.bing.net/th/id/OIP.f7MS0EtRThJCIDrl5qWXmAHaF0?rs=1&pid=ImgDetMain&o=7&rm=3",
         category: "News",
         description:
             "A thrilling book that offers a look at our changing world through the eyes of an unforgettable narrator.",
@@ -85,7 +85,7 @@ const featuredBooks = [
         rating: 4.6,
         reviews: 987,
         time: "24/07/2025 08:00",
-        image: "https://scontent.fdad3-6.fna.fbcdn.net/v/t39.30808-6/521481973_1718901252838060_8436415386296698537_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=OqMkIXiqlnAQ7kNvwE87hzl&_nc_oc=AdlB79ptTnvXNp5tiJEUez4kNh85zwSQjwBmrdL129fRCp8fBx9r4-WkQ-2QfUlOawfL8Xi6l7lEM-G-RGU9AHP8&_nc_zt=23&_nc_ht=scontent.fdad3-6.fna&_nc_gid=y9ThA8fwHV2OvP8PEK7F6A&oh=00_Afb6E7BlkYyMH1kCNXqssRzgbNPekFLK0RrjHwNkF6ffmg&oe=68CFBE2E",
+        image: "https://tse1.mm.bing.net/th/id/OIP.f7MS0EtRThJCIDrl5qWXmAHaF0?rs=1&pid=ImgDetMain&o=7&rm=3",
         category: "Event",
         description:
             "Coffee Talk Saturday morning 8:00 am",
