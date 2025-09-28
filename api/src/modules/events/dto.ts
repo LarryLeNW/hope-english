@@ -1,7 +1,8 @@
-import { IsString, IsOptional, IsDateString, IsInt, IsIn, IsEnum, IsArray, ArrayNotEmpty } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { IsString, IsOptional, IsDateString, IsInt, IsIn, IsEnum, IsArray, ArrayNotEmpty, ValidateNested } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
 import { DayOfWeek } from '@prisma/client';
+import { SendEmailUserDto } from 'modules/email/entities/email-send.entity';
 
 export class CreateEventDto {
     @ApiProperty({ description: 'Tiêu đề của sự kiện', example: 'Giáng sinh 2023' })
@@ -69,6 +70,28 @@ export class CreateEventDto {
         return DayOfWeek[value.toUpperCase() as keyof typeof DayOfWeek] || DayOfWeek.ALL;
     })
     dayOfWeek?: DayOfWeek[];
+
+    @ApiPropertyOptional({
+        description: 'Danh sách người nhận email khi tạo sự kiện (nếu muốn gửi luôn).',
+        type: SendEmailUserDto,
+        isArray: true,
+        example: [
+            { id: '1', email: 'alice@example.com', name: 'Alice' },
+            { id: '2', email: 'bob@example.com' }
+        ],
+    })
+
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => SendEmailUserDto)
+    sendEmails?: SendEmailUserDto[];
+
+    @ApiProperty({ description: 'Có gửi email thông báo cho các thành viên hay không khi tạo sự kiện', example: false, required: false })
+    @IsOptional()
+    @IsIn([true, false])
+    @Transform(({ value }) => value === 'true' || value === true)
+    sendMember: boolean;
 }
 
 export class UpdateEventDto {

@@ -1,0 +1,11 @@
+<h2 style="margin:0 0 12px 0;">Chào {{name}},</h2>
+
+<p style="margin:0 0 8px 0;">
+  Sự kiện <b>{{event.title}}</b> sẽ diễn ra
+  lúc <b>{{formatDate event.startsAt "HH:mm dd/MM/yyyy"}}</b>
+  {{#if event.location}}tại <b>{{event.location}}</b>{{/if}}.
+</p>
+
+{{#if event.desc}}
+  <p style="margin:8px 0 0 0;">{{event.desc}}</p>
+{{/if}}

@@ -197,6 +197,33 @@ model BibleVerse {
   @@map("bible_verses")
 }
 
+
+model EmailSend {
+  id         String   @id @default(uuid())
+  campaignId String
+  userId     String
+  to         String   @db.VarChar(320)
+  messageId  String?  @db.VarChar(255)
+  status     String   @default("queued") // 'queued' | 'sent' | 'failed' | 'bounced'
+  attempts   Int      @default(0)
+  lastError  String?
+  createdAt  DateTime @default(now())
+  sentAt     DateTime?
+
+  @@unique([campaignId, userId])
+  @@index([campaignId, status])
+}
+
+model EmailSuppression {
+  id        String   @id @default(uuid())
+  email     String   @unique @db.VarChar(320)
+  reason    String?  // 'unsubscribe' | 'bounce' | 'complaint' | ...
+  meta      Json?
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+
 enum Role {
   USER
   MOD
@@ -258,3 +285,5 @@ enum DayOfWeek {
   SUNDAY
   ALL
 }
+
+

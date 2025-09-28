@@ -1,10 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'shared/prisma.service';
 import { CreateEventDto, ListEventsQueryDto, UpdateEventDto } from 'modules/events/dto';
+import { EmailService } from 'modules/email/email.service';
+import { UserService } from 'modules/user/user.service';
+import { Event } from '@prisma/client';
 
 @Injectable()
 export class EventsService {
-    constructor(private prisma: PrismaService) { }
+    constructor(private prisma: PrismaService,
+        private readonly emailService: EmailService,
+        private readonly userService: UserService
+    ) { }
 
     async listEvents(query: ListEventsQueryDto) {
         const filters: any = {};
@@ -49,20 +55,45 @@ export class EventsService {
         });
     }
 
-    async createEvent(userId, dto: CreateEventDto) {
-        return this.prisma.event.create({
-            data: {
-                title: dto.title,
-                startsAt: new Date(dto.startsAt),
-                endsAt: new Date(dto.endsAt),
-                location: dto.location,
-                desc: dto.desc,
-                authorId: userId,
-                images: dto.images,
-                dayOfWeek: dto.dayOfWeek,
-                time: dto.time,
-                color: dto.color,
-            },
+    async createEvent(userId: string, dto: CreateEventDto) {
+        return this.prisma.$transaction(async (tx) => {
+            const event = await tx.event.create({
+                data: {
+                    title: dto.title,
+                    startsAt: new Date(dto.startsAt),
+                    endsAt: new Date(dto.endsAt),
+                    location: dto.location,
+                    desc: dto.desc,
+                    authorId: userId,
+                    images: dto.images,
+                    dayOfWeek: dto.dayOfWeek,
+                    time: dto.time,
+                    color: dto.color,
+                },
+            });
+
+            if (dto.sendEmails?.length) {
+                const campaignId = `event:${event.id}:invite:v1`;
+                await this.emailService.enqueueCampaign(campaignId, dto.sendEmails, {
+                    template: 'event-invite',
+                    vars: {
+                        locale: 'vi',
+                        event: {
+                            title: event.title,
+                            startsAt: event.startsAt,
+                            location: event.location,
+                            desc: event.desc,
+                        },
+                    },
+                });
+            }
+
+            if (dto.sendMember) {
+                const campaignId = `event:${event.id}:notify-all:v1`;
+                await this.notifyAllMembers(campaignId, event);
+            }
+
+            return event;
         });
     }
 
@@ -94,4 +125,30 @@ export class EventsService {
         }
         return this.prisma.event.delete({ where: { id } });
     }
+
+    async notifyAllMembers(campaignId: string, event: Event) {
+        let total = 0;
+        for await (const batch of this.userService.listRecipientsInBatches()) {
+            const jobsUsers = batch.map(u => ({
+                id: u.id,
+                email: u.email,
+                name: u.name ?? 'bạn',
+                vars: { locale: u.locale ?? 'vi' },
+            }));
+
+            await this.emailService.enqueueCampaign(
+                campaignId,
+                jobsUsers,
+                {
+                    template: 'event-invite', vars: {
+                        event,
+                    }
+                },
+            );
+            console.log(batch.length);
+            total += batch.length;
+        }
+        return { totalQueued: total };
+    }
+
 }
