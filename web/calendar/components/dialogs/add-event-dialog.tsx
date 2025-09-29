@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
@@ -17,6 +17,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { colorOptions, dayOfWeekOptions } from "@/app/constants";
 import useEventStore from "@/store/event";
 import { mergeDateAndHour, mergeDateAndTime } from "@/lib";
+import ImageUpload from "@/components/ImageUpload";
+import { Camera } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface IProps {
   children: React.ReactNode;
@@ -28,7 +31,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
   const { users } = useCalendar();
   const { createEvent } = useEventStore();
   const { isOpen, onClose, onToggle } = useDisclosure();
-
+  const [isUploadAvatar, setIsUploadAvatar] = useState<boolean>(false);
   const form = useForm<TEventFormData>({
     resolver: zodResolver(eventSchema),
     defaultValues: {
@@ -39,11 +42,14 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
       dayOfWeek: [],
       images: [],
       color: "blue",
-      time: null
+      time: "",
+      sendMember: true,
     },
   });
+  const uploadedImages = form.watch("images") || [];
 
   const onSubmit = (data: TEventFormData) => {
+    console.log("🚀 ~ onSubmit ~ data:", data)
     createEvent(data);
     onClose();
     form.reset();
@@ -52,8 +58,15 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
   useEffect(() => {
     form.reset({
-      startsAt: startDate ? startDate.toISOString() : null,
-      endsAt: startDate ? startDate.toISOString() : null,
+      title: "",
+      desc: "",
+      startsAt: startDate ? startDate.toISOString() : undefined,
+      endsAt: startDate ? startDate.toISOString() : undefined,
+      dayOfWeek: [],
+      images: [],
+      color: "blue",
+      time: "",
+      sendMember: true,
     });
   }, [startDate, startTime, form.reset]);
 
@@ -90,34 +103,61 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     }),
   };
 
-  const hourOptions = Array.from({ length: 25 }, (_, h) => ({
-    value: h, label: String(h).padStart(2, "0") + ":00",
-  }));
-
   return (
-    <Dialog open={isOpen} onOpenChange={onToggle}>
+    <Dialog open={isOpen} onOpenChange={onToggle} >
       <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <DialogContent>
+      <DialogContent className="md:max-w-2xl md:max-h-11/12 overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>Add New Event</DialogTitle>
         </DialogHeader>
-
         <Form {...form}>
-          <form id="event-form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input id="title" placeholder="Enter a title" data-invalid={fieldState.invalid} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
+          <form id="event-form" onSubmit={form.handleSubmit(onSubmit)} className="grid md:grid-cols-2 gap-4 py-4">
+            <div className="col-span-2 font-medium text-sm text-gray-700 flex items-center gap-4" >
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field, fieldState }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input id="title" placeholder="Enter a title" data-invalid={fieldState.invalid} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <ImageUpload
+                updateStatus={(status) => setIsUploadAvatar(status)}
+                onUploadSuccess={(urls: string[]) => {
+                  form.setValue("images", urls, { shouldValidate: true });
+                }}
+                isUploading={isUploadAvatar}
+              >
+                <Button
+                  size="sm"
+                  type="button"
+                  className="mt-6 p-0 rounded-full bg-purple-600 hover:bg-purple-700 flex items-center gap-1"
+                  disabled={isUploadAvatar}
+                >
+                  {isUploadAvatar ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Uploading...</span>
+                    </>
+                  ) : (
+                    <>
+                      <p>Upload</p>
+                      <Camera className="w-4 h-4" />
+                    </>
+                  )}
+                </Button>
+              </ImageUpload>
+
+            </div>
+
+
 
             <div className="flex items-start gap-2">
               <FormField
@@ -129,6 +169,27 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                     <FormControl>
                       <SingleDayPicker
                         id="startDate"
+                        value={field.value ? new Date(field.value) : undefined}
+                        onSelect={date => field.onChange(date.toISOString())}
+                        placeholder="Select a date"
+                        data-invalid={fieldState.invalid}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex items-start gap-2">
+              <FormField
+                control={form.control}
+                name="endsAt"
+                render={({ field, fieldState }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>End Date</FormLabel>
+                    <FormControl>
+                      <SingleDayPicker
                         value={field.value ? new Date(field.value) : undefined}
                         onSelect={date => field.onChange(date.toISOString())}
                         placeholder="Select a date"
@@ -164,41 +225,23 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                 </FormItem>
               )}
             />
-            <FormField
-              name="dayOfWeek"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Days of the Week</FormLabel>
-                  <FormControl>
-                    <Select
-                      isMulti
-                      options={dayOfWeekOptions}
-                      value={field.value?.map((day: string) => ({ value: day, label: day }))}
-                      onChange={(selectedOptions) => {
-                        const selectedValues = selectedOptions?.map((option: any) => option.value) || [];
-                        field.onChange(selectedValues);
-                      }}
-                      placeholder="Select days"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex items-start gap-2">
+            <div >
               <FormField
-                control={form.control}
-                name="endsAt"
+                name="dayOfWeek"
                 render={({ field, fieldState }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>End Date</FormLabel>
+                  <FormItem>
+                    <FormLabel>Days of the Week</FormLabel>
                     <FormControl>
-                      <SingleDayPicker
-                        value={field.value ? new Date(field.value) : undefined}
-                        onSelect={date => field.onChange(date.toISOString())}
-                        placeholder="Select a date"
-                        data-invalid={fieldState.invalid}
+                      <Select
+                        className="md:max-h-9"
+                        isMulti
+                        options={dayOfWeekOptions}
+                        value={field.value?.map((day: string) => ({ value: day, label: day }))}
+                        onChange={(selectedOptions) => {
+                          const selectedValues = selectedOptions?.map((option: any) => option.value) || [];
+                          field.onChange(selectedValues);
+                        }}
+                        placeholder="Select days"
                       />
                     </FormControl>
                     <FormMessage />
@@ -209,22 +252,10 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
             <FormField
               control={form.control}
-              name="desc"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} value={field.value} data-invalid={fieldState.invalid} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="color"
               render={({ field, fieldState }) => (
-                <FormItem>
+                <FormItem
+                >
                   <FormLabel>Color</FormLabel>
                   <FormControl>
                     <Select
@@ -243,19 +274,23 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               )}
             />
 
+
             <FormField
               control={form.control}
-              name="images"
+              name="sendMember"
               render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Images (URLs)</FormLabel>
+                <FormItem
+                >
+                  <FormLabel>Send To Members</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Enter image URLs separated by commas"
-                      {...field}
-                      value={field.value ? field.value.join(", ") : ""}
-                      onChange={e => field.onChange(e.target.value.split(", ").map((url) => url.trim()))}
-                      data-invalid={fieldState.invalid}
+                    <Select
+                      inputId="sendMember"
+                      defaultValue={{ value: true, label: "Yes" }}
+                      options={[{ value: true, label: "Yes" }, { value: false, label: "No" }]}
+                      value={[{ value: true, label: "Yes" }, { value: false, label: "No" }].find(o => o.value === field.value)}
+                      onChange={(opt: any) => field.onChange(opt?.value)}
+                      placeholder="Send email to members?"
+                      classNamePrefix="react-select"
                     />
                   </FormControl>
                   <FormMessage />
@@ -263,6 +298,34 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="desc"
+              render={({ field, fieldState }) => (
+                <FormItem
+                  className="col-span-2"
+                >
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} value={field.value} data-invalid={fieldState.invalid} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {uploadedImages.length > 0 && (
+              <div className="col-span-2 flex flex-wrap gap-2 mb-4">
+                {uploadedImages.map((url, idx) => (
+                  <img
+                    key={idx}
+                    src={url}
+                    alt={`uploaded-${idx}`}
+                    className="w-24 h-24 object-cover rounded-md border"
+                  />
+                ))}
+              </div>
+            )}
           </form>
         </Form>
 

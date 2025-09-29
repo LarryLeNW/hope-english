@@ -25,6 +25,7 @@ export const eventSchema = z.object({
   time: TimeHHmm,
   images: z.array(z.string().url()).optional(),
   dayOfWeek: z.array(DayOfWeekEnum).optional(),
+  sendMember: z.boolean().optional(),
 });
 
 export type TEventFormData = z.infer<typeof eventSchema>;
